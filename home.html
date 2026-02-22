@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liminal Records | Buenos Aires</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: IBM Plex Mono + fallback/similar a Neue Montreal (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon star (data svg) -->
+    <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon fill='%23F5F5F5' points='12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9'/%3E%3C/svg%3E">
+    
+    <style>
+        :root {
+            --bg-deep: #050507;
+            --off-white: #f5f5f5;
+            --accent: #7bd389; /* acento sutil y moderno */
+            --muted: rgba(245,245,245,0.28);
+            /* Tipografías del manual */
+            --font-main: 'Neue Montreal', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; /* cuerpo */
+            --font-mono: 'IBM Plex Mono', monospace;   /* técnico / acentos */
+            --font-logo: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--off-white);
+            font-family: var(--font-main);
+            margin: 0;
+            overflow-x: hidden;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Liminal Records | Buenos Aires</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <!-- Cargamos tipografías similares a las del manual (Neue Montreal sustituida por Inter/Hanken para web gratuita, IBM Plex Mono es exacta) -->
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet">
+    
+            <style>
+                :root {
+                    --bg-deep: #0a0a0a;
+                    --off-white: #f5f5f5;
+                    --accent: #4a5d6a; /* azul/verde apagado */
+                    --muted: rgba(245,245,245,0.28);
+                    /* Tipografías del manual */
+                    --font-main: 'Hanken Grotesk', sans-serif; /* Simil Neue Montreal */
+                    --font-mono: 'IBM Plex Mono', monospace;   /* Exacta del manual */
+                    --font-logo: 'DM Serif Display', serif;     /* Simil Blur para impacto */
+                }
+
+                body {
+                    background-color: var(--bg-deep);
+                    color: var(--off-white);
+                    font-family: var(--font-main);
+                    margin: 0;
+                    overflow-x: hidden;
+                    -webkit-font-smoothing: antialiased;
+                }
+
+                .font-mono-liminal { font-family: var(--font-mono); }
+                .font-logo-liminal { font-family: var(--font-logo); }
+
+                .grain {
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 100%; height: 100%;
+                    pointer-events: none;
+                    z-index: 50;
+                    opacity: 0.03;
+                    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+                }
+
+                /* Animaciones sutiles */
+                .reveal {
+                    opacity: 0;
+                    transform: translateY(15px);
+                    transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+                }
+
+                .reveal.active {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+                .line-draw {
+                    width: 0;
+                    height: 1px;
+                    background-color: rgba(245, 245, 245, 0.15);
+                    transition: width 1.5s ease;
+                }
+
+                .line-draw.active {
+                    width: 100%;
+                }
+
+                /* Botones y CTAs según manual */
+                .cta-liminal {
+                    font-family: var(--font-main);
+                    font-size: 11px;
+                    letter-spacing: 0.2em;
+                    text-transform: uppercase;
+                    position: relative;
+                    padding-bottom: 4px;
+                }
+
+                .cta-liminal::after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    transform: scaleX(0);
+                    height: 1px;
+                    bottom: 0;
+                    left: 0;
+                    background-color: var(--off-white);
+                    transform-origin: bottom right;
+                    transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+                }
+
+                .cta-liminal:hover::after {
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                }
+
+                /* Estilo de lanzamientos del manual (01/) */
+                .release-number {
+                    font-family: var(--font-mono);
+                    font-size: 14px;
+                    opacity: 0.4;
+                }
+
+                /* Releases component */
+                .releases-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 5rem; }
+                .release-item { display: flex; flex-direction: column; gap: 1.25rem; }
+                @media (min-width: 768px) { .release-item { flex-direction: row; align-items: end; justify-content: space-between; } }
+                .release-meta { display:flex; align-items:center; gap:1rem; }
+                .release-cta { display:flex; align-items:center; gap:1.5rem; }
+                .release-item .cta-liminal { font-size:11px; }
+
+                /* Image treatment: grayscale + contrast, mobile-first */
+                .art-image { filter: grayscale(100%) contrast(1.15); transition: filter 0.6s ease, opacity 0.6s ease; }
+                .art-image:hover, .art-image:focus { filter: grayscale(40%) contrast(1.15); opacity: 0.95; }
+
+                /* Staff images: stay grayscale on hover (no color reveal) */
+                .staff-image { filter: grayscale(100%) contrast(1.15); transition: filter 0.6s ease, opacity 0.6s ease; }
+                .staff-image:hover, .staff-image:focus { filter: grayscale(100%) contrast(1.15); opacity: 0.95; }
+
+                /* Hide scrollbar but keep functionality (smooth scroll) */
+                ::-webkit-scrollbar { width: 0; }
+                html { scrollbar-width: none; }
+                body { -ms-overflow-style: none; }
+
+                .blur-sphere {
+                    position: absolute;
+                    width: 50vw;
+                    height: 50vw;
+                    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, rgba(10, 10, 10, 0) 70%);
+                    z-index: -1;
+                    filter: blur(100px);
+                    will-change: transform;
+                    animation: float 25s infinite alternate;
+                }
+
+                @keyframes float {
+                    from { transform: translate(-5%, -5%); }
+                    to { transform: translate(5%, 5%); }
+                }
+
+                /* Respect user preference for reduced motion */
+                @media (prefers-reduced-motion: reduce) {
+                    .blur-sphere, .grain, .reveal { animation: none !important; transition: none !important; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="grain"></div>
+    
+            <!-- Hero: Logo y Headline -->
+            <header class="relative h-screen flex flex-col items-center justify-between py-16 px-6 overflow-hidden">
+                <div class="blur-sphere" style="top: -10%; right: -10%;"></div>
+        
+                <!-- Logo: editable fácilmente (coloca tu archivo en assets/logo.svg o cambia #site-logo src) -->
+                <div class="z-10 text-center reveal">
+                    <div class="flex flex-col items-center">
+                        <span class="text-xl mb-1 font-light">*</span>
+
+                        <!-- Imagen de logo (sustituir src por tu logo). Si falla, se mostrará el texto de fallback. -->
+                        <img id="site-logo" src="assets/logo.svg" alt="Liminal" class="h-12 mb-1" onerror="this.style.display='none'" decoding="async" loading="eager" style="background-color: transparent !important; mix-blend-mode: screen;">
+
+                        <!-- Texto fallback / accesible -->
+                        <h1 id="logo-text" class="font-logo-liminal text-4xl lowercase tracking-tighter">liminal</h1>
+
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="font-mono-liminal text-[8px] tracking-[0.3em] uppercase opacity-40">Records</span>
+                            <span class="w-[1px] h-2 bg-white/20"></span>
+                            <span class="font-mono-liminal text-[8px] tracking-[0.3em] uppercase opacity-40">Buenos Aires</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="z-10 text-center max-w-5xl px-4">
+                    <h2 class="text-5xl md:text-8xl font-bold tracking-tighter leading-[0.85] mb-10 reveal" style="transition-delay: 200ms;">
+                        MÚSICA <br> ANTES <br> QUE TODO.
+                    </h2>
+                    <p class="font-mono-liminal text-[10px] md:text-[12px] tracking-widest opacity-40 reveal uppercase" style="transition-delay: 400ms;">
+                        sello discográfico //
+                    </p>
+                </div>
+
+                <div class="z-10 reveal" style="transition-delay: 600ms;">
+                    <a href="#releases" class="cta-liminal">AUTENTICIDAD</a>
+                </div>
+            </header>
+
+            <!-- Lanzamientos: Estilo Manual Pág 8 -->
+            <section id="releases" class="py-40 px-6 md:px-32 max-w-7xl mx-auto">
+                <div class="flex items-center gap-4 mb-24 reveal">
+                    <span class="font-mono-liminal text-[10px] opacity-30">01/</span>
+                    <h3 class="text-[10px] tracking-[0.5em] uppercase opacity-40">últimos lanzamientos</h3>
+                </div>
+        
+                <ul class="releases-list">
+                    <!-- Tysan -->
+                    <li class="release-item group reveal" aria-label="Release 01 Tysan True Love">
+                        <div class="release-meta pb-10 border-b border-white/5">
+                            <span class="release-number">01/</span>
+                            <div>
+                                <h4 class="text-2xl md:text-4xl font-medium tracking-tight mb-2">TYSAN — TRUE LOVE</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Lanzamiento M00</p>
+                            </div>
+                        </div>
+                        <div class="release-cta pb-10 border-b border-white/5">
+                            <span class="font-mono-liminal text-[12px] opacity-30">2:16</span>
+                            <a href="#" class="cta-liminal">Escuchar</a>
+                        </div>
+                    </li>
+
+                    <!-- Siguiente -->
+                    <li class="release-item group reveal" aria-label="Release 02 Luz Negra Sombras" style="transition-delay: 100ms;">
+                        <div class="release-meta pb-10 border-b border-white/5">
+                            <span class="release-number">02/</span>
+                            <div>
+                                <h4 class="text-2xl md:text-4xl font-medium tracking-tight mb-2">LUZ NEGRA — SOMBRAS</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Lanzamiento M01</p>
+                            </div>
+                        </div>
+                        <div class="release-cta pb-10 border-b border-white/5">
+                            <span class="font-mono-liminal text-[12px] opacity-30">3:02</span>
+                            <a href="#" class="cta-liminal">Escuchar</a>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Artistas: Manual Pág 9 -->
+                <section class="py-40 px-6 md:px-32 bg-[#0a0a0a]">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="flex items-center gap-4 mb-24 reveal">
+                            <span class="font-mono-liminal text-[10px] opacity-30">02/</span>
+                            <h3 class="text-[10px] tracking-[0.5em] uppercase opacity-40">Artistas</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+                            <!-- Artistas principales -->
+                            <article class="reveal">
+                                <div class="aspect-[3/4] overflow-hidden bg-zinc-900 mb-6">
+                                    <img src="assets/artists/tysan.jpg" alt="TYSAN" class="w-full h-full object-cover art-image" loading="lazy" decoding="async" width="1000" height="1333">
+                                </div>
+                                <h4 class="text-3xl font-bold tracking-tighter">TYSAN</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Artista — BA, ARG</p>
+                                <div class="mt-6"><a href="#" class="cta-liminal">Perfil del artista</a></div>
+                            </article>
+
+                            <article class="reveal" style="transition-delay: 80ms;">
+                                <div class="aspect-[3/4] overflow-hidden bg-zinc-900 mb-6">
+                                    <img src="assets/artists/jaka.jpg" alt="JAKA" class="w-full h-full object-cover art-image" loading="lazy" decoding="async" width="1000" height="1333">
+                                </div>
+                                <h4 class="text-3xl font-bold tracking-tighter">JAKA</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Artista</p>
+                                <div class="mt-6"><a href="#" class="cta-liminal">Perfil del artista</a></div>
+                            </article>
+
+                            <article class="reveal" style="transition-delay: 160ms;">
+                                <div class="aspect-[3/4] overflow-hidden bg-zinc-900 mb-6">
+                                    <img src="assets/artists/tobba.jpg" alt="TOBBA" class="w-full h-full object-cover art-image" loading="lazy" decoding="async" width="1000" height="1333">
+                                </div>
+                                <h4 class="text-3xl font-bold tracking-tighter">TOBBA</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Artista</p>
+                                <div class="mt-6"><a href="#" class="cta-liminal">Perfil del artista</a></div>
+                            </article>
+
+                            <article class="reveal" style="transition-delay: 200ms;">
+                                <div class="aspect-[3/4] overflow-hidden bg-zinc-900 mb-6">
+                                    <img src="assets/artists/collin.jpg" alt="COLLIN" class="w-full h-full object-cover art-image" loading="lazy" decoding="async" width="1000" height="1333">
+                                </div>
+                                <h4 class="text-3xl font-bold tracking-tighter">COLLIN</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Artista</p>
+                                <div class="mt-6"><a href="#" class="cta-liminal">Perfil del artista</a></div>
+                            </article>
+
+                            <article class="reveal" style="transition-delay: 260ms;">
+                                <div class="aspect-[3/4] overflow-hidden bg-zinc-900 mb-6">
+                                    <img src="assets/artists/n30n.jpg" alt="N30N" class="w-full h-full object-cover art-image" loading="lazy" decoding="async" width="1000" height="1333">
+                                </div>
+                                <h4 class="text-2xl font-medium tracking-tighter">N30N</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Productor</p>
+                            </article>
+
+                            <article class="reveal" style="transition-delay: 320ms;">
+                                <div class="aspect-[3/4] overflow-hidden bg-zinc-900 mb-6">
+                                    <img src="assets/artists/saito.jpg" alt="SAITO" class="w-full h-full object-cover art-image" loading="lazy" decoding="async" width="1000" height="1333">
+                                </div>
+                                <h4 class="text-2xl font-medium tracking-tighter">SAITO</h4>
+                                <p class="font-mono-liminal text-[10px] opacity-30 uppercase">Productor</p>
+                            </article>
+                        </div>
+
+                        <!-- Staff / Equipo -->
+                        <div class="mt-20 reveal">
+                            <div class="flex items-center gap-4 mb-8">
+                                <span class="font-mono-liminal text-[10px] opacity-30">STAFF</span>
+                                <h3 class="text-[10px] tracking-[0.5em] uppercase opacity-40">Equipo</h3>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                                <div class="text-center">
+                                    <div class="w-36 h-36 mx-auto mb-4 overflow-hidden rounded-full bg-zinc-900">
+                                        <img src="assets/staff/brian.jpg" alt="Brian Barca" class="w-full h-full object-cover staff-image" loading="lazy" decoding="async" width="400" height="400">
+                                    </div>
+                                    <div class="font-bold">BRIAN BARCA</div>
+                                    <div class="text-xs opacity-50">MKT — Cofundador</div>
+                                </div>
+
+                                <div class="text-center">
+                                    <div class="w-36 h-36 mx-auto mb-4 overflow-hidden rounded-full bg-zinc-900">
+                                        <img src="assets/staff/richard.jpg" alt="Richard Rickemberg" class="w-full h-full object-cover staff-image" loading="lazy" decoding="async" width="400" height="400">
+                                    </div>
+                                    <div class="font-bold">RICHARD RICKEMBERG</div>
+                                    <div class="text-xs opacity-50">Cofundador</div>
+                                </div>
+
+                                <div class="text-center">
+                                    <div class="w-36 h-36 mx-auto mb-4 overflow-hidden rounded-full bg-zinc-900">
+                                        <img src="assets/staff/agus.jpg" alt="Agus Gastaldo" class="w-full h-full object-cover staff-image" loading="lazy" decoding="async" width="400" height="400">
+                                    </div>
+                                    <div class="font-bold">AGUS GASTALDO</div>
+                                    <div class="text-xs opacity-50">Diseñadora</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            <!-- Sobre: Manual Pág 2 -->
+            <section class="py-56 px-6 md:px-32 relative overflow-hidden">
+                <div class="blur-sphere" style="bottom: -10%; left: -10%;"></div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-center gap-4 mb-16 reveal">
+                        <span class="font-mono-liminal text-[10px] opacity-30">03/</span>
+                        <h3 class="text-[10px] tracking-[0.5em] uppercase opacity-40">Sobre nosotros</h3>
+                    </div>
+                    <div class="space-y-10 text-2xl md:text-4xl font-light tracking-tight leading-[1.2] reveal">
+                        <p>Liminal Records es un estudio que busca potenciar proyectos musicales con cuidado y atención.</p>
+                        <p>Operamos en la intersección del sonido, la cultura y el lenguaje visual.</p>
+                
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16">
+                            <div class="space-y-2">
+                                <span class="font-mono-liminal text-[9px] opacity-30 block">FILOSOFÍA 01</span>
+                                <p class="text-xs uppercase tracking-widest opacity-50">Lanzamientos intencionales</p>
+                            </div>
+                            <div class="space-y-2">
+                                <span class="font-mono-liminal text-[9px] opacity-30 block">FILOSOFÍA 02</span>
+                                <p class="text-xs uppercase tracking-widest opacity-50">Evolución artística</p>
+                            </div>
+                            <div class="space-y-2">
+                                <span class="font-mono-liminal text-[9px] opacity-30 block">FILOSOFÍA 03</span>
+                                <p class="text-xs uppercase tracking-widest opacity-50">Construir movimientos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cierre / Statement -->
+            <section class="h-[90vh] flex flex-col items-center justify-center px-6 text-center relative">
+                <div class="space-y-6 mb-32 reveal">
+                    <h2 class="text-3xl md:text-7xl font-bold tracking-tighter uppercase leading-[0.9]">
+                        ENTRE DONDE ESTABAS <br>
+                        Y A DONDE VAS <br>
+                        AHÍ ESTÁ <span class="font-logo-liminal lowercase italic font-normal px-2">liminal.</span>
+                    </h2>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-12 md:gap-24 reveal" style="transition-delay: 300ms;">
+                    <div class="space-y-4">
+                        <p class="font-mono-liminal text-[10px] tracking-[0.4em] uppercase opacity-30">Contacto</p>
+                        <a href="mailto:hello@liminal.ar" class="cta-liminal block">hello@liminal.ar</a>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="font-mono-liminal text-[10px] tracking-[0.4em] uppercase opacity-30">Ubicación</p>
+                        <p class="text-xs uppercase tracking-widest">Buenos Aires, Argentina</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer Minimal -->
+            <footer class="py-12 px-6 md:px-32 flex flex-col md:flex-row justify-between items-center border-t border-white/5 gap-6">
+                <div class="font-mono-liminal text-[9px] tracking-[0.3em] uppercase opacity-30">
+                    Liminal Records &copy; 2025 // Todos los derechos reservados
+                </div>
+                <div class="flex gap-10">
+                    <a href="#" class="font-mono-liminal text-[9px] tracking-[0.3em] uppercase opacity-30 hover:opacity-100 transition-opacity">Instagram</a>
+                    <a href="#" class="font-mono-liminal text-[9px] tracking-[0.3em] uppercase opacity-30 hover:opacity-100 transition-opacity">Spotify</a>
+                </div>
+            </footer>
+
+            <script>
+                // Inicializar interacciones cuando DOM esté listo; mejora rendimiento y permite fallback de logo
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Observador para animaciones de entrada
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) entry.target.classList.add('active');
+                        });
+                    }, { threshold: 0.1 });
+
+                    document.querySelectorAll('.reveal, .line-draw').forEach(el => observer.observe(el));
+
+                    // Manejo de logo: cache-bust dinámico para evitar logo viejo en caché + fallback
+                    const logoImg = document.getElementById('site-logo');
+                    const logoText = document.getElementById('logo-text');
+                    if (logoImg) {
+                        const cacheBust = Date.now();
+                        const baseSrc = (logoImg.getAttribute('src') || '').split('?')[0];
+                        if (baseSrc) logoImg.src = baseSrc + '?v=' + cacheBust;
+                    }
+
+                    if (logoImg && logoText) {
+                        if (logoImg.complete && logoImg.naturalWidth !== 0) {
+                            logoText.style.display = 'none';
+                        } else {
+                            logoImg.addEventListener('load', () => { logoText.style.display = 'none'; });
+                            logoImg.addEventListener('error', () => { logoImg.style.display = 'none'; });
+                        }
+                    }
+
+                    // Parallax sutil en mouse para el Hero (throttle con requestAnimationFrame)
+                    const spheres = document.querySelectorAll('.blur-sphere');
+                    let raf = null;
+                    document.addEventListener('mousemove', (e) => {
+                        if (raf) cancelAnimationFrame(raf);
+                        raf = requestAnimationFrame(() => {
+                            const x = (e.clientX / window.innerWidth - 0.5) * 15;
+                            const y = (e.clientY / window.innerHeight - 0.5) * 15;
+                            spheres.forEach(s => { s.style.transform = `translate3d(${x}px, ${y}px, 0)`; });
+                        });
+                    }, { passive: true });
+
+                    // Smooth scroll for internal anchors (SPA-like behavior)
+                    document.querySelectorAll('a[href^="#"]').forEach(a => {
+                        a.addEventListener('click', (ev) => {
+                            const href = a.getAttribute('href');
+                            if (!href || href === '#') return;
+                            const target = document.querySelector(href);
+                            if (target) {
+                                ev.preventDefault();
+                                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                history.replaceState(null, '', href);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </body>
+        </html>
+          
