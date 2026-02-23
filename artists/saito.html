@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAITO | LIMINAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0a0a;
+            --off-white: #f5f5f5;
+            --accent: #4a5d6a;
+            --muted: rgba(245,245,245,0.28);
+            --font-main: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --font-logo: 'DM Serif Display', serif;
+        }
+        
+        html { scroll-behavior: smooth; }
+        body { 
+            background: var(--bg-deep); 
+            color: var(--off-white); 
+            font-family: var(--font-main); 
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .font-mono-liminal { font-family: var(--font-mono); }
+        .font-logo-liminal { font-family: var(--font-logo); }
+        
+        /* Blur gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(74, 93, 106, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Animaciones de entrada mejoradas */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        .animate-scale-in { animation: scaleIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        .animate-slide-in { animation: slideInLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+        .delay-600 { animation-delay: 600ms; }
+        
+        /* Carousel mejorado */
+        .carousel-container {
+            position: relative;
+            border-radius: 2xl;
+            overflow: hidden;
+            background: rgba(74, 93, 106, 0.1);
+        }
+        
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .carousel-slide {
+            min-width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.15);
+            transition: filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .carousel-slide:hover {
+            filter: grayscale(20%) contrast(1.25) brightness(1.05);
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 20;
+        }
+        
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(245,245,245,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(245,245,245,0.2);
+        }
+        
+        .carousel-dot.active {
+            background: rgba(245,245,245,0.9);
+            transform: scale(1.3);
+        }
+        
+        .carousel-dot:hover {
+            background: rgba(245,245,245,0.6);
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(74, 93, 106, 0.4);
+            color: var(--off-white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            z-index: 15;
+            opacity: 0;
+        }
+        
+        .carousel-container:hover .carousel-btn {
+            opacity: 1;
+        }
+        
+        .carousel-btn:hover {
+            background: rgba(74, 93, 106, 0.7);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .carousel-btn.prev {
+            left: 12px;
+        }
+        
+        .carousel-btn.next {
+            right: 12px;
+        }
+        
+        .carousel-counter {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            background: rgba(10, 10, 10, 0.6);
+            color: rgba(245,245,245,0.6);
+            padding: 6px 12px;
+            border-radius: 4px;
+            z-index: 15;
+        }
+        
+        /* CTA mejorado con más sofisticación */
+        .cta-liminal {
+            font-family: var(--font-main);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 6px;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+        }
+        
+        .cta-liminal::after {
+            content: ''; 
+            position: absolute; 
+            width: 100%; 
+            transform: scaleX(0); 
+            height: 1px; 
+            bottom: 0; 
+            left: 0; 
+            background-color: var(--off-white); 
+            transform-origin: bottom right; 
+            transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        
+        .cta-liminal::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background: radial-gradient(circle, rgba(245,245,245,0.05) 0%, transparent 70%);
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .cta-liminal:hover::after { 
+            transform: scaleX(1); 
+            transform-origin: bottom left; 
+        }
+        
+        .cta-liminal:hover::before {
+            opacity: 1;
+        }
+        
+        .cta-liminal:hover { 
+            opacity: 1;
+            letter-spacing: 0.3em;
+        }
+        
+        /* Back link mejorado */
+        .back-link {
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+        }
+        
+        .back-link::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            width: 12px;
+            height: 1px;
+            background: var(--off-white);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .back-link:hover {
+            transform: translateX(-8px);
+            opacity: 1;
+        }
+        
+        .back-link:hover::before {
+            opacity: 1;
+        }
+        
+        /* Línea decorativa animada */
+        .divider-line {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(245,245,245,0.15), transparent);
+            margin: 2rem 0;
+            transition: all 0.6s ease;
+        }
+        
+        .divider-line:hover {
+            background: linear-gradient(90deg, transparent, rgba(245,245,245,0.25), transparent);
+        }
+        
+        /* Textos con glow en hover */
+        h1, h2 {
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        h1:hover, h2:hover {
+            text-shadow: 0 0 20px rgba(245,245,245,0.1);
+        }
+        
+        /* Mejor separación de contenido */
+        main {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <main class="min-h-screen flex flex-col items-center justify-center px-6 py-24 relative">
+        <div class="max-w-xl w-full text-center">
+            <!-- Carousel de fotos + videos -->
+            <div class="carousel-container mb-10 animate-fade-in-up">
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="carouselTrack">
+                        <img src="../assets/artists/saito.jpg" alt="Saito - Photo 1" class="carousel-slide">
+                        <img src="../assets/artists/saito-2.jpg" alt="Saito - Photo 2" class="carousel-slide">
+                        <img src="../assets/artists/saito-3.jpg" alt="Saito - Photo 3" class="carousel-slide">
+                    </div>
+                    
+                    <button class="carousel-btn prev" id="carouselPrev">‹</button>
+                    <button class="carousel-btn next" id="carouselNext">›</button>
+                    
+                    <div class="carousel-nav" id="carouselNav"></div>
+                    <div class="carousel-counter">
+                        <span id="carouselCurrent">1</span> / <span id="carouselTotal">3</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Nombre con tipografía de home (DM Serif en cursiva) -->
+            <h1 class="font-logo-liminal italic text-6xl md:text-8xl mb-6 tracking-tighter lowercase animate-fade-in-up delay-100" style="font-style: italic; font-weight: 400; line-height: 0.9;">
+                saito
+            </h1>
+            
+            <!-- Rol/Etiqueta -->
+            <p class="font-mono-liminal text-[10px] uppercase tracking-[0.4em] opacity-50 mb-8 animate-fade-in-up delay-200 letter-spacing-wide">Productor</p>
+            
+            <!-- Divisor sutil -->
+            <div class="divider-line animate-fade-in-up delay-300"></div>
+            
+            <!-- Subtítulo principal -->
+            <h2 class="text-2xl md:text-4xl font-bold tracking-tight mb-10 animate-fade-in-up delay-300 leading-tight">Entre el ruido y la magia nocturna</h2>
+            
+            <!-- Biografía -->
+            <p class="text-lg md:text-xl font-light leading-relaxed mb-12 opacity-85 animate-fade-in-up delay-400">
+                Saito es un productor y artista porteño que transforma el pulso de la ciudad en paisajes sonoros misteriosos y relajantes. Su música, influenciada por el Detroit trap y la electrónica, conecta con el ruido de trenes, luces y la energía nocturna de Buenos Aires. Busca la magia en los detalles y el concepto integral en cada obra, invitando a perderse en atmósferas profundas y honestas.
+            </p>
+            
+            <!-- CTA Instagram -->
+            <div class="flex justify-center mb-12 animate-fade-in-up delay-500">
+                <a 
+                    href="https://www.instagram.com/saitone_____/" 
+                    class="cta-liminal" 
+                    target="_blank" 
+                    rel="noopener" 
+                    aria-label="Instagram de Saito"
+                >
+                    Instagram
+                </a>
+            </div>
+            
+            <!-- Back link con animación mejorada -->
+            <a 
+                href="../home.html" 
+                class="font-mono-liminal text-xs opacity-40 hover:opacity-100 back-link animate-fade-in-up delay-500"
+            >
+                <span>← Volver a LIMINAL</span>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // Configuración completa para experiencia moderna 2026
+        document.addEventListener('DOMContentLoaded', () => {
+            // === 1. CAROUSEL SETUP ===
+            const carouselTrack = document.getElementById('carouselTrack');
+            const slides = carouselTrack.querySelectorAll('.carousel-slide');
+            const totalSlides = slides.length;
+            const carouselNav = document.getElementById('carouselNav');
+            let currentSlide = 0;
+            
+            // Crear dots de navegación
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', () => goToSlide(i));
+                carouselNav.appendChild(dot);
+            }
+            
+            const dots = carouselNav.querySelectorAll('.carousel-dot');
+            
+            function updateCarousel() {
+                carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+                document.getElementById('carouselCurrent').textContent = currentSlide + 1;
+            }
+            
+            function goToSlide(n) {
+                currentSlide = (n + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+            
+            function nextSlide() {
+                goToSlide(currentSlide + 1);
+            }
+            
+            function prevSlide() {
+                goToSlide(currentSlide - 1);
+            }
+            
+            document.getElementById('carouselNext').addEventListener('click', nextSlide);
+            document.getElementById('carouselPrev').addEventListener('click', prevSlide);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') nextSlide();
+                if (e.key === 'ArrowLeft') prevSlide();
+            });
+            
+            // Auto-advance cada 8 segundos
+            setInterval(nextSlide, 8000);
+            
+            // === 2. ANIMACIONES DE ENTRADA MEJORADAS ===
+            document.querySelectorAll('[class*="animate-"]').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = el.className.includes('animate-scale-in') ? 'scale(0.95)' : 'translateY(30px)';
+            });
+            
+            requestAnimationFrame(() => {
+                document.querySelectorAll('[class*="animate-"]').forEach(el => {
+                    el.style.transition = 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translate(0) scale(1)';
+                });
+            });
+            
+            // === 3. OBSERVER PARA EFECTOS AL SCROLLEAR ===
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('h1, h2, p, a, .divider-line').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // === 4. FADE DE ELEMENTOS SEGÚN SCROLL (SIN PARALLAX VISUAL) ===
+            let ticking = false;
+            const scrollFade = () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const scrolled = window.pageYOffset;
+                        
+                        const main = document.querySelector('main');
+                        if (main) {
+                            const opacity = Math.max(0, 1 - (scrolled / 800));
+                            main.style.opacity = opacity;
+                        }
+                        
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            };
+            
+            window.addEventListener('scroll', scrollFade, { passive: true });
+            
+            // === 5. INTERACTIVIDAD DE LINKS ===
+            const ctaLink = document.querySelector('.cta-liminal');
+            if (ctaLink) {
+                ctaLink.addEventListener('click', (e) => {
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.width = '10px';
+                    ripple.style.height = '10px';
+                    ripple.style.background = 'rgba(245,245,245,0.3)';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.pointerEvents = 'none';
+                    ripple.style.animation = 'ripple 0.6s ease-out';
+                    
+                    const style = document.createElement('style');
+                    if (!document.getElementById('ripple-style')) {
+                        style.id = 'ripple-style';
+                        style.textContent = `
+                            @keyframes ripple {
+                                to {
+                                    transform: scale(4);
+                                    opacity: 0;
+                                }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                });
+            }
+            
+            // === 6. SMOOTH NAVIGATION ===
+            document.querySelectorAll('a[href="../home.html"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (!link.target || link.target === '_self') {
+                        e.preventDefault();
+                        document.querySelector('main').style.opacity = '0';
+                        document.querySelector('main').style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            window.location.href = link.href;
+                        }, 300);
+                    }
+                });
+            });
+            
+            // === 7. PULSACIÓN SUTIL EN ELEMENTOS ===
+            const addPulseEffect = (selector) => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.addEventListener('mouseenter', function() {
+                        this.style.transform = 'scale(1.01)';
+                    });
+                    el.addEventListener('mouseleave', function() {
+                        this.style.transform = 'scale(1)';
+                    });
+                });
+            };
+            
+            addPulseEffect('h1, h2');
+            
+            // === 8. ACTUALIZAR VARIABLES DE SCROLL ===
+            window.addEventListener('scroll', () => {
+                document.documentElement.style.setProperty('--scroll-y', window.pageYOffset + 'px');
+            });
+        });
+    </script>
+</body>
+</html>
